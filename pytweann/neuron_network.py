@@ -27,6 +27,9 @@ class Neuron(object):
 
 class NeuronNetwork(object):
     def __init__(self, genome):
+
+        self.genome = genome
+
         input_size = 0
         output_size = 0
         hidden_size = 0

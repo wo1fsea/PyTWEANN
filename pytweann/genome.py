@@ -12,43 +12,23 @@ Description:
 
 class Gene(object):
     def __init__(self):
-        self._from = 0
-        self._to = 0
-        self._weight = 0
-        self._functioning = True
+        self.from_node = 0
+        self.to_node = 0
+        self.weight = 0
+        self.functioning = True
 
-        self._innovation = 0
+        self.innovation = 0
 
     def copy(self):
         new_gene = Gene()
-        new_gene._from = self._from
-        new_gene._to = self._to
-        new_gene._weight = self._weight
-        new_gene._functioning = self._functioning
+        new_gene.from_node = self.from_node
+        new_gene.to_node = self.to_node
+        new_gene.weight = self.weight
+        new_gene.functioning = self.functioning
 
-        self._innovation = self._innovation
+        new_gene.innovation = self.innovation
 
         return new_gene
-
-    @property
-    def from_node(self):
-        return self._from
-
-    @property
-    def to_node(self):
-        return self._to
-
-    @property
-    def weight(self):
-        return self._weight
-
-    @property
-    def functioning(self):
-        return self._functioning
-
-    @property
-    def innovation(self):
-        return self._innovation
 
 
 class Genome(object):
@@ -69,17 +49,38 @@ class Genome(object):
             "functioning": 0,
         }
 
-    def weight_mutate(self, step):
-        pass
+    def disjoint(self, genome):
+        innovation1 = set([gene.innovation for gene in self.genes])
+        innovation2 = set([gene.innovation for gene in genome.genes])
+        disjoint = innovation1.symmetric_difference(innovation2)
+        return len(disjoint) / max(len(self.genes), len(genome.genes))
 
-    def link_mutate(self, is_bias):
-        pass
+    def weight(self, genome):
+        innovation1 = set([gene.innovation for gene in self.genes])
+        innovation2 = set([gene.innovation for gene in genome.genes])
+        coincidence = innovation1.intersection(innovation2)
 
-    def node_mutate(self):
-        pass
+        
 
-    def function_mutate(self):
-        pass
+    def distance(self, genome):
+        return 0
 
-    def mutate(self):
-        pass
+
+def weight_mutate(self, step):
+    pass
+
+
+def link_mutate(self, is_bias):
+    pass
+
+
+def node_mutate(self):
+    pass
+
+
+def function_mutate(self):
+    pass
+
+
+def mutate(self):
+    pass

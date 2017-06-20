@@ -34,3 +34,6 @@ default_config = {
     "max_nodes_size": 1000000,
 }
 
+
+def new_config():
+    return dict(default_config)
