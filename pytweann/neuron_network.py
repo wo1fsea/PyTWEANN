@@ -53,5 +53,6 @@ class NeuronNetwork(object):
                     value += self.neurons[i] * weight
                 neuron.value = sigmoid(value)
 
+        input_size = 0
         output_size = 0
-        return tuple(map(lambda x: x.value, self.neurons[:-output_size]))
+        return tuple(map(lambda x: x.value, self.neurons[input_size:input_size + output_size]))

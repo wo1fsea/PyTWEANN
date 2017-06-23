@@ -11,11 +11,15 @@ Description:
 
 
 class Gene(object):
+    """
+    Connect Gene
+    """
+
     def __init__(self):
         self.from_node = 0
         self.to_node = 0
         self.weight = 0
-        self.functioning = True
+        self.enable = True
 
         self.innovation = 0
 
@@ -24,7 +28,7 @@ class Gene(object):
         new_gene.from_node = self.from_node
         new_gene.to_node = self.to_node
         new_gene.weight = self.weight
-        new_gene.functioning = self.functioning
+        new_gene.enable = self.enable
 
         new_gene.innovation = self.innovation
 
@@ -46,7 +50,7 @@ class Genome(object):
             "bias": 0,
             "link": 0,
             "node": 0,
-            "functioning": 0,
+            "enable": 0,
         }
 
     def disjoint(self, genome):
@@ -55,32 +59,35 @@ class Genome(object):
         disjoint = innovation1.symmetric_difference(innovation2)
         return len(disjoint) / max(len(self.genes), len(genome.genes))
 
-    def weight(self, genome):
-        innovation1 = set([gene.innovation for gene in self.genes])
-        innovation2 = set([gene.innovation for gene in genome.genes])
-        coincidence = innovation1.intersection(innovation2)
+    def weight_difference(self, genome):
+        # innovation1 = dict([(gene.innovation, gene) for gene in self.genes])
+        innovation2 = dict([(gene.innovation, gene) for gene in genome.genes])
 
-        
+        weight_sum = 0
+        matching = 0
+
+        for gene in self.genes:
+            gene2 = innovation2.get(gene.innovation)
+            if gene2:
+                weight_sum += abs(gene.weight - gene2.weight)
+                matching += 1
+
+        return weight_sum / matching
 
     def distance(self, genome):
         return 0
 
+    def weight_mutate(self, step):
+        pass
 
-def weight_mutate(self, step):
-    pass
+    def link_mutate(self, is_bias):
+        pass
 
+    def node_mutate(self):
+        pass
 
-def link_mutate(self, is_bias):
-    pass
+    def enable_mutate(self):
+        pass
 
-
-def node_mutate(self):
-    pass
-
-
-def function_mutate(self):
-    pass
-
-
-def mutate(self):
-    pass
+    def mutate(self):
+        pass

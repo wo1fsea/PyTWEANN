@@ -25,7 +25,7 @@ default_config = {
     "bias_mutation_chance": 0.4,
     "link_mutation_chance": 2.0,
     "node_mutation_chance": 0.5,
-    "functioning_mutation_chance": 0.4,
+    "enable_mutation_chance": 0.4,
     "step_size": 0.1,
 
     "perturb_chance": 0.9,
