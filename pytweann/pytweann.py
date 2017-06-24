@@ -10,12 +10,9 @@ Description:
 ----------------------------------------------------------------------------"""
 
 from . import config
+from . import environment
 
-class Environment(object):
-    def __int__(self):
-        pass
-
-class PyTWEANN(object):
+class PyENAT(object):
     def __init__(self, **kwargs):
         self.config = config.new_config()
 
@@ -23,6 +20,4 @@ class PyTWEANN(object):
             assert k in self.config, "Parameter key %s is not in config." % k
             self.config[k] = v
 
-        self.environment = []
-
-    def
+        self.environment = environment.Environment()
