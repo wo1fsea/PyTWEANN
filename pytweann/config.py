@@ -19,7 +19,7 @@ default_config = {
     "delta_weights": 0.4,
     "delta_threshold": 1.,
 
-    "stale_spacies": 15,
+    "staleness_threshold": 15,
 
     "weight_mutation_chance": 0.25,
     "bias_mutation_chance": 0.4,
@@ -31,8 +31,6 @@ default_config = {
 
     "perturb_chance": 0.9,
     "crossover_chance": 0.75,
-
-    "max_nodes_size": 1000000,
 }
 
 

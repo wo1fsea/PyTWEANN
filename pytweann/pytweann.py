@@ -12,12 +12,12 @@ Description:
 from . import config
 from . import environment
 
-class PyENAT(object):
-    def __init__(self, **kwargs):
-        self.config = config.new_config()
 
-        for k, v in kwargs:
-            assert k in self.config, "Parameter key %s is not in config." % k
-            self.config[k] = v
+def create_environment(**kwargs):
+    cfg = config.new_config()
 
-        self.environment = environment.Environment()
+    for k, v in kwargs.items():
+        assert k in cfg, "Parameter key %s is not in config." % k
+        cfg[k] = v
+
+    return environment.Environment(cfg)

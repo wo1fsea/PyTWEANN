@@ -30,29 +30,58 @@ class NeuronNetwork(object):
 
         self.genome = genome
 
-        input_size = 0
-        output_size = 0
-        hidden_size = 0
+        self.input_size = self.genome.input_size
+        self.output_size = self.genome.output_size
+        self.hidden_size = self.genome.hidden_size
 
         self.neurons = []
 
-        for i in range(input_size + output_size + hidden_size):
+        for i in range(self.input_size + self.output_size + self.hidden_size + 1):
             self.neurons.append(Neuron())
 
         for gene in genome.genes:
             self.neurons[gene.to_node].add_incoming(gene)
 
     def evaluate(self, inputs):
+        assert len(inputs) == self.input_size, "wrong input data size."
+
+        self.neurons[0].value = 1
+
         for i, data in enumerate(inputs):
-            self.neurons[i].value = data
+            self.neurons[i + 1].value = data
 
         for neuron in self.neurons:
             if neuron.incoming_link:
                 value = 0
                 for i, weight in neuron.incoming_link.items():
-                    value += self.neurons[i] * weight
+                    value += self.neurons[i].value * weight
                 neuron.value = sigmoid(value)
 
-        input_size = 0
-        output_size = 0
-        return tuple(map(lambda x: x.value, self.neurons[input_size:input_size + output_size]))
+        return tuple(map(lambda x: x.value, self.neurons[self.input_size + 1:self.input_size + self.output_size + 1]))
+
+
+def main():
+    from genome import Genome, Gene
+    from environment import Environment
+    from config import new_config
+    config = new_config()
+    config["input_size"] = 2
+    config["output_size"] = 1
+    environment = Environment(config)
+    genome = Genome(environment)
+    gene1 = Gene()
+    gene1.from_node = 1
+    gene1.to_node = 3
+    gene1.weight = 1
+    gene2 = Gene()
+    gene2.from_node = 2
+    gene2.to_node = 3
+    gene2.weight = 2
+    genome.genes.append(gene1)
+    genome.genes.append(gene2)
+    neron_network = NeuronNetwork(genome)
+    print(neron_network.evaluate([1, -0.1]))
+
+
+if __name__ == '__main__':
+    main()
