@@ -6,7 +6,7 @@ Author:
 Date:
     2017/6/19
 Description:
-    pytweann.py
+    pyenat.py
 ----------------------------------------------------------------------------"""
 
 from . import config
