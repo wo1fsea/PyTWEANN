@@ -26,24 +26,16 @@ class Neuron(object):
 
 
 class NeuronNetwork(object):
-    def __init__(self, genome):
+    def __init__(self):
+        self.input_size = 0
+        self.output_size = 0
+        self.hidden_size = 0
 
-        self.genome = genome
-
-        self.input_size = self.genome.input_size
-        self.output_size = self.genome.output_size
-        self.hidden_size = self.genome.hidden_size
+        self.activate_order = []
 
         self.neurons = []
 
-        for i in range(self.input_size + self.output_size + self.hidden_size + 1):
-            self.neurons.append(Neuron())
-
-        for gene in genome.genes:
-            if gene.enable:
-                self.neurons[gene.to_node].add_incoming(gene)
-
-    def evaluate(self, inputs):
+    def activate(self, inputs):
         assert len(inputs) == self.input_size, "wrong input data size."
 
         self.neurons[0].value = 1
@@ -53,20 +45,39 @@ class NeuronNetwork(object):
 
         for i in range(self.hidden_size):
             neuron = self.neurons[self.input_size + self.output_size + 1 + i]
-            self.evaluate_neuron(neuron)
+            self.activate_neuron(neuron)
 
         for i in range(self.output_size):
             neuron = self.neurons[self.input_size + 1 + i]
-            self.evaluate_neuron(neuron)
+            self.activate_neuron(neuron)
 
         return tuple(map(lambda x: x.value, self.neurons[self.input_size + 1:self.input_size + self.output_size + 1]))
 
-    def evaluate_neuron(self, neuron):
+    def activate_neuron(self, neuron):
         if neuron.incoming_link:
             value = 0
             for i, weight in neuron.incoming_link.items():
                 value += self.neurons[i].value * weight
             neuron.value = sigmoid(value)
+
+    @staticmethod
+    def create_with_genome(self, genome):
+        # self.genome = genome
+
+        self.input_size = self.genome.input_size
+        self.output_size = self.genome.output_size
+        self.hidden_size = self.genome.hidden_size
+
+        self.activate_order = []
+
+        self.neurons = []
+
+        for i in range(self.input_size + self.output_size + self.hidden_size + 1):
+            self.neurons.append(Neuron())
+
+        for gene in genome.genes:
+            if gene.enable:
+                self.neurons[gene.to_node].add_incoming(gene)
 
 
 def main():
