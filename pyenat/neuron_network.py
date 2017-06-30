@@ -13,10 +13,7 @@ import math
 
 
 def sigmoid(x):
-	return x
-
-
-# return 2 / (1 + math.exp(-4.9 * x)) - 1
+	return 2 / (1 + math.exp(-4.9 * x)) - 1
 
 
 class Neuron(object):
@@ -35,6 +32,8 @@ class NeuronNetwork(object):
 		self.hidden_size = 0
 
 		self.activate_order = None
+
+		self.activate_function = sigmoid
 
 		self.neurons = []
 
@@ -60,7 +59,7 @@ class NeuronNetwork(object):
 			value = 0
 			for i, weight in neuron.incoming_link.items():
 				value += self.neurons[i].value * weight
-			neuron.value = sigmoid(value)
+			neuron.value = self.activate_function(value)
 
 	# @staticmethod
 	def _get_requested_neurons(self):
@@ -135,17 +134,19 @@ class NeuronNetwork(object):
 def main():
 	neron_network = NeuronNetwork()
 	neron_network.input_size = 2
-	neron_network.output_size = 1
+	neron_network.output_size = 2
 	neron_network.hidden_size = 1
 
-	for i in range(2 + 1 + 1 + 1):
+	for i in range(neron_network.input_size + neron_network.output_size + neron_network.hidden_size + 1):
 		neron_network.neurons.append(Neuron())
 
 	neron_network.neurons[3].incoming_link[0] = 0.1
 	neron_network.neurons[3].incoming_link[1] = 0.1
-	neron_network.neurons[3].incoming_link[4] = 0.1
+	neron_network.neurons[3].incoming_link[5] = 0.1
 
 	neron_network.neurons[4].incoming_link[3] = 1
+
+	neron_network.neurons[5].incoming_link[4] = 1
 
 	print(neron_network.activate([1, 2]))
 	print(neron_network.activate([1, 2]))
