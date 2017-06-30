@@ -61,7 +61,6 @@ class NeuronNetwork(object):
                 value += self.neurons[i].value * weight
             neuron.value = self.activation_function(value)
 
-    # @staticmethod
     def _get_requested_neurons(self):
         output_neurons = list(range(self.input_size + 1, self.input_size + self.output_size + 1))
         requested_neurons = {}
@@ -88,15 +87,15 @@ class NeuronNetwork(object):
         output_neurons = [node for node in range(self.input_size + 1, self.input_size + 1 + self.output_size)]
 
         while True:
-            min = len(requested_neurons)
+            min_num = len(requested_neurons)
             min_idx = -1
             for index, incoming_indexes in requested_neurons.items():
                 if index in passed_neurons or index in output_neurons:
                     continue
 
                 num = len(tuple(filter(lambda idx: idx not in passed_neurons, incoming_indexes)))
-                if num <= min:
-                    min = num
+                if num <= min_num:
+                    min_num = num
                     min_idx = index
 
                     if num == 0:
@@ -105,10 +104,10 @@ class NeuronNetwork(object):
                     else:
                         break
 
-            if min == len(requested_neurons):
+            if min_num == len(requested_neurons):
                 break
 
-            if min != 0:
+            if min_num != 0:
                 activate_order.append(min_idx)
                 passed_neurons.add(min_idx)
 
@@ -133,28 +132,3 @@ class NeuronNetwork(object):
         for gene in genome.genes:
             if gene.enable:
                 self.neurons[gene.to_node].add_incoming(gene)
-
-
-def main():
-    neron_network = NeuronNetwork()
-    neron_network.input_size = 2
-    neron_network.output_size = 2
-    neron_network.hidden_size = 1
-
-    for i in range(neron_network.input_size + neron_network.output_size + neron_network.hidden_size + 1):
-        neron_network.neurons.append(Neuron())
-
-    neron_network.neurons[3].incoming_link[0] = 0.1
-    neron_network.neurons[3].incoming_link[1] = 0.1
-    neron_network.neurons[3].incoming_link[5] = 0.1
-
-    neron_network.neurons[4].incoming_link[3] = 1
-
-    neron_network.neurons[5].incoming_link[4] = 1
-
-    print(neron_network.activate([1, 2]))
-    print(neron_network.activate([1, 2]))
-
-
-if __name__ == '__main__':
-    main()
