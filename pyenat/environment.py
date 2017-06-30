@@ -73,7 +73,8 @@ class Environment(object):
     def remove_weak_species(self):
         total_average_fitness = sum(map(lambda x: x.average_fitness, self.species))
         self.species = list(
-            filter(lambda x: math.floor(x.average_fitness / total_average_fitness * self.population) >= 1, self.species))
+            filter(lambda x: math.floor(x.average_fitness / total_average_fitness * self.population) >= 1,
+                   self.species))
 
     def cull_species(self, cut_to_one):
         for species in self.species:

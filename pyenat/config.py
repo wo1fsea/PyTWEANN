@@ -15,16 +15,16 @@ default_config = {
 
     "population": 300,
 
-    "delta_disjoint": 2.,
+    "delta_disjoint": 1.,
     "delta_weights": 0.4,
-    "delta_threshold": 1.,
+    "delta_threshold": 3.,
 
     "staleness_threshold": 15,
 
     "weight_mutation_chance": 0.25,
     "bias_mutation_chance": 0.4,
-    "link_mutation_chance": 2.0,
-    "node_mutation_chance": 0.5,
+    "link_mutation_chance": 0.05,
+    "node_mutation_chance": 0.03,
     "enable_mutation_chance": 0.2,
     "disable_mutation_chance": 0.4,
     "step_size": 0.1,
