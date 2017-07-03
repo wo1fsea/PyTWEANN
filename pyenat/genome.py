@@ -90,7 +90,7 @@ class Genome(object):
         innovation1 = set([gene.innovation for gene in self.genes])
         innovation2 = set([gene.innovation for gene in genome.genes])
         disjoint = innovation1.symmetric_difference(innovation2)
-        return len(disjoint) / max(len(self.genes), len(genome.genes))
+        return len(disjoint) / max(len(self.genes), len(genome.genes), 1)
 
     def weight_difference(self, genome):
         # innovation1 = dict([(gene.innovation, gene) for gene in self.genes])
@@ -149,6 +149,9 @@ class Genome(object):
         self.genes.append(new_gene)
 
     def node_mutate(self):
+        if not self.genes:
+            return
+
         gene = random.choice(self.genes)
         if not gene.enable:
             return

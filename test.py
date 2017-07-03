@@ -12,7 +12,7 @@ Description:
 import unittest
 
 TEST_MODULE = "tests"
-TEST_CASE_NAME = "^tests[\w]+\.py$"
+TEST_CASE_NAME = "^test[\w]+\.py$"
 
 
 def load_test_suite():
