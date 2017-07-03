@@ -258,5 +258,5 @@ class Genome(object):
 
     def get_neuron_network(self):
         if not self.neuron_network:
-            self.neuron_network = NeuronNetwork(self)
+            self.neuron_network = NeuronNetwork.create_with_genome(self)
         return self.neuron_network
