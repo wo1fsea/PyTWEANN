@@ -13,10 +13,16 @@ default_config = {
     "input_size": 1,
     "output_size": 1,
 
-    "population": 300,
+    "feed_forward": True,
 
-    "delta_disjoint": 1.,
-    "delta_weights": 0.4,
+    "population": 150,
+
+    # c1 = c2
+    "lambda_disjoint": 1.,
+    # c3
+    "lambda_weights": 3.0,
+
+    # delta_t
     "delta_threshold": 3.,
 
     "staleness_threshold": 15,

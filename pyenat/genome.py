@@ -19,37 +19,32 @@ class Gene(object):
     Connect Gene
     """
 
-    gene_innovation = 0
-
-    def __init__(self, innovation=True):
+    def __init__(self):
         self.from_node = 0
         self.to_node = 0
         self.weight = 0
         self.enable = True
 
-        self.innovation = 0
+    @staticmethod
+    def generate_innovation(from_node, to_node):
+        return "%d-%d" % (from_node, to_node)
 
-        if innovation:
-            self.new_innovation()
-
-    def new_innovation(self):
-        Gene.gene_innovation += 1
-        self.innovation = Gene.gene_innovation
+    @property
+    def innovation(self):
+        return self.generate_innovation(self.from_node, self.to_node)
 
     def copy(self):
-        new_gene = Gene(False)
+        new_gene = Gene()
         new_gene.from_node = self.from_node
         new_gene.to_node = self.to_node
         new_gene.weight = self.weight
         new_gene.enable = self.enable
 
-        new_gene.innovation = self.innovation
-
         return new_gene
 
 
 class Genome(object):
-    def __init__(self, environment):
+    def __init__(self, environment, init_with_full_connection=False):
         self.environment = environment
 
         self.genes = []
@@ -75,6 +70,22 @@ class Genome(object):
             "disable": config["disable_mutation_chance"],
             "step_size": config["step_size"],
         }
+
+        for i in range(self.input_size):
+            for j in range(self.output_size):
+                from_node = i + 1
+                to_node = self.input_size + j
+
+                new_gene = Gene()
+                new_gene.from_node = from_node
+                new_gene.to_node = to_node
+                new_gene.weight = self.random_weight()
+
+                self.genes.append(new_gene)
+
+    @staticmethod
+    def random_weight():
+        return random.random() * 4 - 2
 
     @property
     def fitness(self):
@@ -109,7 +120,7 @@ class Genome(object):
 
     def distance(self, genome):
         config = self.environment.config
-        return config["delta_disjoint"] * self.disjoint(genome) + config["delta_weights"] * self.weight_difference(
+        return config["lambda_disjoint"] * self.disjoint(genome) + config["lambda_weights"] * self.weight_difference(
             genome)
 
     def weight_mutate(self):
@@ -119,7 +130,7 @@ class Genome(object):
             if random.random() < perturb_chance:
                 gene.weight = gene.weight + random.random() * 2 * step_size - step_size
             else:
-                gene.weight = random.random() * 4 - 2
+                gene.weight = self.random_weight()
 
     def random_node(self, input_excluded=False):
         start_index = self.input_size + 1 if input_excluded else 0
@@ -133,18 +144,22 @@ class Genome(object):
         from_node = self.random_node(False) if not is_bias else 0
         to_node = self.random_node(True)
 
-        # feed_forward
-        from_node, to_node = min(from_node, to_node), max(from_node, to_node)
-        if from_node >= self.input_size + 1 and from_node < self.input_size + self.output_size + 1 and to_node > self.input_size + self.output_size + 1:
-            from_node, to_node = to_node, from_node
+        if self.environment.config["feed_forward"]:
+            if from_node == to_node:
+                return
 
-        if self.contains_link(from_node, to_node):  # or from_node == to_node:
+            from_node, to_node = min(from_node, to_node), max(from_node, to_node)
+            if self.input_size + 1 <= from_node < self.input_size + self.output_size + 1 < to_node:
+                from_node, to_node = to_node, from_node
+
+        innovation = Gene.generate_innovation(from_node, to_node)
+        if any(map(lambda x: x.innovation == innovation, self.genes)):
             return
 
         new_gene = Gene()
         new_gene.from_node = from_node
         new_gene.to_node = to_node
-        new_gene.weight = random.random() * 4 - 2
+        new_gene.weight = self.random_weight()
 
         self.genes.append(new_gene)
 
@@ -157,13 +172,11 @@ class Genome(object):
             return
 
         gene1 = gene.copy()
-        gene1.new_innovation()
         gene1.to_node = self.input_size + self.output_size + self.hidden_size + 1
         gene1.weight = 1
         self.genes.append(gene1)
 
         gene2 = gene.copy()
-        gene2.new_innovation()
         gene2.from_node = self.input_size + self.output_size + self.hidden_size + 1
         self.genes.append(gene2)
 

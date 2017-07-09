@@ -35,7 +35,7 @@ class Environment(object):
 
     def _init_genomes(self):
         for i in range(self.population):
-            genome = Genome(self)
+            genome = Genome(self, True)
             genome.mutate()
             self.add_to_species(genome)
 

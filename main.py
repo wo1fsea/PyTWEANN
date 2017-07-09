@@ -12,7 +12,7 @@ Description:
 import pyenat.pyenat
 import random
 
-XOR = [[1, 0, 1], [1, 1, 0], [0, 0, 0], [0, 1, 1]]
+XOR = [[1, 0, 1], [1, 1, -1], [0, 0, -1], [0, 1, 1]]
 AND = [[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, -1]]
 
 XOR_Sample = []
@@ -29,17 +29,22 @@ random.shuffle(XOR_test)
 
 def main():
     environment = pyenat.pyenat.create_environment(input_size=2, output_size=1)
+    old_fitness = 0
     while True:
         for genome in environment.get_genomes():
             fitness = 0
+            right_sum = 0
             neuron_network = genome.get_neuron_network()
             for data in XOR_Sample:
-                output = neuron_network.evaluate(data[:-1])[0]
-                fitness += 1 - (output - data[-1]) ** 2
+                output = neuron_network.activate(data[:-1])[0]
+                fitness += 1 - ((output - data[-1]) / 2) ** 2
+                right_sum += 1 if output * data[-1] > 0 else 0
             genome.fitness = fitness
-            c = 0
-            if genome.fitness > 15.5:
-                print("get")
+            if genome.fitness > old_fitness:
+                old_fitness = genome.fitness
+                if right_sum == len(XOR_Sample):
+                    print("get!", genome.hidden_size)
+                print(old_fitness, right_sum)
         environment.new_generation()
 
 
